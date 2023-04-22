@@ -1,6 +1,5 @@
 package joaquim.jwttranslation.security
 
-import jakarta.servlet.http.HttpServletRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -12,7 +11,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
-import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer.AuthorizationManagerRequestMatcherRegistry
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -38,18 +36,16 @@ class SecurityConfiguration {
             .frameOptions().disable()
             .and()
             .cors()
-            .configurationSource { request: HttpServletRequest? -> buildCorsConfiguration() }
+            .configurationSource { buildCorsConfiguration() }
             .and()
             .csrf()
             .disable()
-            .authorizeHttpRequests(
-                Customizer { authorize ->
-                    authorize.requestMatchers(*URLS_PERMITIDAS)
-                        .permitAll()
-                        .anyRequest()
-                        .authenticated()
-                }
-            )
+            .authorizeHttpRequests { authorize ->
+                authorize.requestMatchers(*URLS_PERMITIDAS)
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated()
+            }
             .exceptionHandling()
             .authenticationEntryPoint(autenticacaoJwtEntryPoint)
             .and()
@@ -97,14 +93,14 @@ class SecurityConfiguration {
     private fun buildCorsConfiguration(): CorsConfiguration {
         val configuration = CorsConfiguration()
         configuration.allowedOriginPatterns = listOf(ORIGENS_PERMITIDAS)
-        configuration.allowedMethods = Arrays.asList(
+        configuration.allowedMethods = listOf(
             HttpMethod.GET.name(),
             HttpMethod.POST.name(),
             HttpMethod.PUT.name(),
             HttpMethod.DELETE.name()
         )
         configuration.allowedHeaders =
-            Arrays.asList(HttpHeaders.CONTENT_TYPE, HttpHeaders.AUTHORIZATION)
+            listOf(HttpHeaders.CONTENT_TYPE, HttpHeaders.AUTHORIZATION)
         return configuration
     }
 
@@ -123,6 +119,7 @@ class SecurityConfiguration {
             AntPathRequestMatcher("/v3/api-docs/**"),
             AntPathRequestMatcher("/actuator/*"),
             AntPathRequestMatcher("/usuarios/login/**"),
+            AntPathRequestMatcher("/usuarios/testando/sem-token"),
             AntPathRequestMatcher("/h2-console/**"),
             AntPathRequestMatcher("/error/**")
         )

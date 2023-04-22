@@ -23,7 +23,7 @@ class GerenciadorTokenJwt {
         return getClaimForToken(token) { obj: Claims -> obj.subject }
     }
 
-    fun getExpirationDateFromToken(token: String?): Date {
+    private fun getExpirationDateFromToken(token: String?): Date {
         return getClaimForToken(
             token
         ) { obj: Claims -> obj.expiration }
@@ -32,14 +32,14 @@ class GerenciadorTokenJwt {
     fun generateToken(authentication: Authentication): String {
 
         // Para verificacoes de permissões;
-        val authorities = authentication.authorities.stream().map { obj: GrantedAuthority -> obj.authority }
+        authentication.authorities.stream().map { obj: GrantedAuthority -> obj.authority }
             .collect(Collectors.joining(","))
         return Jwts.builder().setSubject(authentication.name)
             .signWith(parseSecret()).setIssuedAt(Date(System.currentTimeMillis()))
             .setExpiration(Date(System.currentTimeMillis() + jwtTokenValidity * 1000)).compact()
     }
 
-    fun <T> getClaimForToken(token: String?, claimsResolver: Function<Claims, T>): T {
+    private fun <T> getClaimForToken(token: String?, claimsResolver: Function<Claims, T>): T {
         val claims = getAllClaimsFromToken(token)
         return claimsResolver.apply(claims)
     }

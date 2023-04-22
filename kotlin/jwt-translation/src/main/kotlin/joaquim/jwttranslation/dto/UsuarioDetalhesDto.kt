@@ -5,7 +5,7 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 
 class UsuarioDetalhesDto(usuario: Usuario) : UserDetails {
-    val nome: String
+    private val nome: String
     private val email: String
     private val senha: String
 
