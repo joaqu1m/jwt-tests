@@ -3,9 +3,10 @@ package joaquim.jwttranslation.dto
 import io.swagger.v3.oas.annotations.media.Schema
 
 class UsuarioLoginDto {
-    @Schema(description = "E-mail do usuário", example = "john@doe.com")
+
+    @Schema(description = "E-mail do usuário", example = "joaquim.pires@sptech.school")
     var email: String? = null
 
-    @Schema(description = "Senha do usuário", example = "123456")
+    @Schema(description = "Senha do usuário", example = "urubu100")
     var senha: String? = null
 }

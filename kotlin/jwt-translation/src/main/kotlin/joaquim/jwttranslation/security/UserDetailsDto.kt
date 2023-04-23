@@ -1,30 +1,23 @@
-package joaquim.jwttranslation.dto
+package joaquim.jwttranslation.security
 
 import joaquim.jwttranslation.model.Usuario
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 
-class UsuarioDetalhesDto(usuario: Usuario) : UserDetails {
-    private val nome: String
-    private val email: String
-    private val senha: String
-
-    init {
-        nome = usuario.nome.toString()
-        email = usuario.email.toString()
-        senha = usuario.senha.toString()
-    }
+class UserDetailsDto (
+    private val usuario: Usuario
+): UserDetails {
 
     override fun getAuthorities(): Collection<GrantedAuthority>? {
         return null
     }
 
-    override fun getPassword(): String {
-        return senha
+    override fun getPassword(): String? {
+        return usuario.senha
     }
 
-    override fun getUsername(): String {
-        return email
+    override fun getUsername(): String? {
+        return usuario.email
     }
 
     override fun isAccountNonExpired(): Boolean {

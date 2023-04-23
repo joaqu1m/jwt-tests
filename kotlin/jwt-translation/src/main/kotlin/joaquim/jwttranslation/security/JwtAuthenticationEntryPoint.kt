@@ -10,7 +10,8 @@ import org.springframework.stereotype.Component
 import java.io.IOException
 
 @Component
-class AutenticacaoEntryPoint : AuthenticationEntryPoint {
+class JwtAuthenticationEntryPoint: AuthenticationEntryPoint {
+
     @Throws(IOException::class, ServletException::class)
     override fun commence(
         request: HttpServletRequest,

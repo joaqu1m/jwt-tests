@@ -13,12 +13,14 @@ import java.util.function.Function
 import java.util.stream.Collectors
 import javax.crypto.SecretKey
 
-class GerenciadorTokenJwt {
+class JwtTokenManager {
+
     @Value("\${jwt.secret}")
     private val secret: String? = null
 
     @Value("\${jwt.validity}")
     private val jwtTokenValidity: Long = 0
+
     fun getUsernameFromToken(token: String?): String {
         return getClaimForToken(token) { obj: Claims -> obj.subject }
     }
@@ -31,7 +33,6 @@ class GerenciadorTokenJwt {
 
     fun generateToken(authentication: Authentication): String {
 
-        // Para verificacoes de permissões;
         authentication.authorities.stream().map { obj: GrantedAuthority -> obj.authority }
             .collect(Collectors.joining(","))
         return Jwts.builder().setSubject(authentication.name)
